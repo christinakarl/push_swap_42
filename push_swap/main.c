@@ -12,56 +12,102 @@
 
 #include "push_swap.h"
 
-int	check_input(char **tab)
+void	clear_tab(char **tab)
 {
 	int	i;
-	int	j;
 
-	j = 0;
-	while (tab[j])
+	i = 0;
+	while (tab[i])
 	{
-		i = 0;
-		while (tab[j][i])
-		{
-			if (tab[j][i] == ' ' || ft_isdigit(tab[j][i]) == 1 || tab[j][i] == '-' || tab[j][i] == '+')
-				i++;
-			else
-				return (1);
-		}
-		j++;
+		free(tab[i]);
+		i++;
 	}
-	return (0);
+	free(tab);
 }
 
+void	clear_list(t_stack **list)
+{
+	t_stack	*next;
 
+	while (*list != NULL)
+	{
+		next = (*list)->next;
+		// free((*list)->content);
+		free(*list);
+		(*list) = next;
+	}
+	*list = NULL;
+}
+
+//free allocated memory
+void	clear_all(char **tab, t_stack **list)
+{
+	clear_tab(tab);
+	clear_list(list);
+}
 
 int	main(int argc, char **argv)
 {
-	//1. check if argv is one string with different numbers or multiple argv & if multiple check each
-	// argv if it is string (using strchr) > if mix "Error\n"
-	// already check for other char (digit, -, +, ' '), otherwise "Error\n"
-	char	**input_tab;
+//done: check if argv is one string with different numbers or multiple argv & if multiple check each
+//done: argv if it is string (using strchr) > if mix "Error\n"
+	char	**tab;
+	t_stack	*a = NULL;
+	t_stack	*b = NULL;
 
 	if (argc < 2) //no parameters
 		return (ft_printf("Error\n"));
-	if (ft_strchr(argv[1], ' ') != NULL)
+	if (ft_strchr(argv[1], ' ') != NULL) //first argv is a string
 	{
 		if (argc > 2) //mix of strings and int (if string is first)
 			return (ft_printf("Error\n"));
-		input_tab = ft_split(argv[1], ' ');
-		if (check_input(input_tab) == 1) //other characters
-			return (ft_printf("Error\n"));
+		tab = ft_split(argv[1], ' ');
 	}
+	else
+		tab = input_tab(argv, argc);
+//done: already check for other char (digit, -, +, ' '), otherwise "Error\n"
+	if (check_input(tab) == 1)
+	{
+		clear_tab(tab);
+		return (ft_printf("Error\n"));
+	}
+//done: check for duplicates >> compare each element with all following elements, beware of case 4 & 04 if dupl > "Error\n"
+//done: create list of int (atoi)
+//done: check for >int max || <int min
+	if (new_list(&a, tab) == 1 || check_dupl(&a) == 1)
+	{
+		clear_all(tab, &a);
+		return (ft_printf("Error\n"));
+	}
+//done: create b list, bubble sort, transform a with b numbers
+	new_list(&b, tab);
+	bubble_sort(&b);
+	index_list(&a, b);
+	clear_list(&b);
+//done: create prev pointers, b list should be empty
+
+	direct_algo(&a, &b);
+
+	ft_printf("a: ");
+	while (a)
+	{
+		ft_printf("%d ", (a->content));
+		a = a->next;
+	}
+	ft_printf("\n");
+	ft_printf("b: ");
+	while (b)
+	{
+		ft_printf("%d ", (b->content));
+		b = b->next;
+	}
+	ft_printf("\n");
+//done: create all action functions
+
+//redirect to right algo
 
 
-
-	//2. if one string > ft_split, if separate argv, use **argv to create **tab of int (atoi)
-	//check for following errors: >int max || <int min, only -- || ++ without digits
-
-	//3. check for duplicates >> compare each element with all following elements, if dupl > "Error\n"
-
-	//if list length == 1, return without any actions
-
-
+	clear_all(tab, &a);
+	clear_list(&b);
+	// exit(0); doesn't really avoid leaks here
 	return (0);
 }

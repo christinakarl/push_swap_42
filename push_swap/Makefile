@@ -10,7 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS			= main.c
+SRCS			= main.c error_management.c list_management.c bubble_sort.c \
+				  operations.c compare.c
 
 OBJS			= ${SRCS:.c=.o}
 
@@ -43,22 +44,17 @@ COLOUR_END		=\033[0m
 all:			${NAME}
 
 ${NAME}:		${OBJS}
-				cd libft; make all
+				cd libft; make bonus
 				${CC} ${CFLAGS} -o $@ ${OBJS} ${LIBS} ${OTH_HEAD}
-				@echo "$(COLOUR_BLUE)**************************<∞>**************************$(COLOUR_END)"
-				@echo " "
-				@echo "$(COLOUR_BLUE)               Compilation successful!$(COLOUR_END)"
-				@echo " "
-				@echo "$(COLOUR_BLUE)**************************<∞>**************************$(COLOUR_END)"
 
 clean:
 				${RM} ${OBJS}
-				cd libft; make clean
-				@echo "$(COLOUR_GREEN)All clear!$(COLOUR_END)"
+				# cd libft; make clean
+				@echo "$(COLOUR_GREEN)( ಠ ͜ʖ ಠ )$(COLOUR_END)"
 
 fclean:			clean
 				${RM} ${NAME}
-				cd libft; make fclean
+				# cd libft; make fclean
 				@echo "$(COLOUR_VIO)All super clear!$(COLOUR_END)"
 
 re:				fclean all
