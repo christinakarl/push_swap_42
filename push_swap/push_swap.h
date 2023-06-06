@@ -24,6 +24,7 @@ typedef struct s_stack
 	int				index;
 	struct s_stack	*target;
 	int				pos;
+	int				move;
 	struct s_stack	*prev;
 	struct s_stack	*next;
 
@@ -37,14 +38,12 @@ int				new_list(t_stack **list, char **tab);
 long long int	ft_longatoi(const char *str);
 void			list_append(t_stack **lst, int content);
 void			bubble_sort(t_stack **head);
-// void			bubble_recursive(t_stack *copy, t_stack *head, int flag);
 void			content_swap(t_stack *one, t_stack *two);
 t_stack			*get_node(t_stack *head, int index);
 void			clear_all(char **tab, t_stack **list);
 void			clear_list(t_stack **list);
 void			clear_tab(char **tab);
 void			index_list(t_stack **list, t_stack *index);
-// t_stack			*empty_list(int len);
 t_stack			*last_node(t_stack *lst);
 t_stack			*first_node(t_stack *lst);
 int				list_size(t_stack *lst);
@@ -70,6 +69,8 @@ void			algo_five(t_stack **a, t_stack **b);
 void			algo_more(t_stack **a, t_stack **b);
 int				find_position(t_stack *list, int find);
 void			set_tp(t_stack **a, t_stack **b);
+int				set_move(t_stack **a, t_stack **b);
+void			find_move(t_stack **a, t_stack **b);
 
 
 

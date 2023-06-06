@@ -103,8 +103,11 @@ void	sb(t_stack **b)
 // //swap first two nodes of both
 void	ss(t_stack **a, t_stack **b)
 {
-	sa(a);
-	sb(b);
+	if (list_size(*a) >= 2)
+		*a = node_swap(*a, (*a)->next);
+	if (list_size(*b) >= 2)
+		*b = node_swap(*b, (*b)->next);
+	ft_printf("ss\n");
 }
 
 //first to last for a, rotate
@@ -136,8 +139,11 @@ void	rb(t_stack **b)
 //first to last both
 void	rr(t_stack **a, t_stack **b)
 {
-	ra(a);
-	rb(b);
+	if (list_size(*a) >= 2)
+		*a = node_rotate(*a);
+	if (list_size(*b) >= 2)
+		*b = node_rotate(*b);
+	ft_printf("rr\n");
 }
 
 //last to first for a, reverse rotate rra
@@ -171,8 +177,13 @@ void	rrb(t_stack **b)
 //last to first for both rrr
 void	rrr(t_stack **a, t_stack **b)
 {
-	rra(a);
-	rrb(b);
+	*b = last_node(*b);
+	*a = last_node(*a);
+	if (list_size(*a) >= 2)
+		*a = node_rotate(*a);
+	if (list_size(*b) >= 2)
+		*b = node_rotate(*b);
+	ft_printf("rrr\n");
 }
 
 //first from a to b, a, nothing if a is empty pb
