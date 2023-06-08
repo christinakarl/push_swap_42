@@ -167,22 +167,48 @@ void	set_tp(t_stack **a, t_stack **b)
 
 
 //find where element is in relation to median & determine how many actions are needed for each element
-int	set_move(t_stack **a, t_stack **b)
+void	set_move(t_stack *a, t_stack **b)
 {
-	int amed;
-	int	bmed;
+	int		alen;
+	int		blen;
+	int		position_b;
+	t_stack	*copy;
 
-	amed = list_size(*a) / 2;
-	bmed = list_size(*b) / 2;
-	//find how to determine how many moves it takes: test if both b & target are above or below median >> rr or rrr would be possible
-
+	alen = list_size(a);
+	blen = list_size(*b);
+	position_b = 0;
+	while (position_b < blen)
+	{
+		copy = get_node(*b, position_b);
+		if (copy->pos <= (blen / 2) && copy->target->pos > (alen / 2))
+			copy->move = copy->pos + (alen - copy->target->pos);
+		else if (copy->pos > (blen / 2) && copy->target->pos <= (alen / 2))
+			copy->move = (blen - copy->pos) + copy->target->pos;
+		else if (copy->pos > (blen / 2) && copy->target->pos > (alen / 2))
+		{
+			if ((blen - copy->pos) > (alen - copy->target->pos))
+				copy->move = (blen - copy->pos) - (alen - copy->target->pos) * 2;
+			else if ((blen - copy->pos) < (alen - copy->target->pos))
+				copy->move = ((alen - copy->target->pos) - (blen - copy->pos)) * 2;
+			else if ((blen - copy->pos) == (alen - copy->target->pos))
+				copy->move = blen - copy->pos;
+		}
+		else if (copy->pos <= (blen / 2) && copy->target->pos <= (alen / 2))
+		{
+			if (copy->pos > copy->target->pos || copy->pos == copy->target->pos)
+				copy->move = copy->pos;
+			else if (copy->pos < copy->target->pos)
+				copy->move = copy->target->pos;
+		}
+		position_b++;
+	}
 }
 
 //move the element which needs the least nr of moves to a
-void	find_move(t_stack **a, t_stack **b)
-{
+// void	find_move(t_stack **a, t_stack **b)
+// {
 
-}
+// }
 
 //algo for >5 elements: 1. push all to b except of 3, 2. algo_three,
 // 3. find target_nodes for all of b nodes, 4. check which one can be moved most easily (least operations)
@@ -200,13 +226,14 @@ void	algo_more(t_stack **a, t_stack **b)
 	}
 	algo_three(a);
 	set_tp(a, b);
+	set_move(*a, b);
 	temp = *b;
 	while (temp)
 	{
 		//find target node for all of b, set positions
 		if (temp->target)
 			ft_printf("b's target: %d\n", temp->target->content);
-		ft_printf("b's position: %d, index: %d\n", temp->pos,temp->index);
+		ft_printf("b's position: %d, index: %d, nr of moves necessary: %d\n", temp->pos,temp->index, temp->move);
 		temp = temp->next;
 		//check which one is moved most easily, depending on if element is above or below median (both b and target)
 

@@ -69,7 +69,7 @@ void			algo_five(t_stack **a, t_stack **b);
 void			algo_more(t_stack **a, t_stack **b);
 int				find_position(t_stack *list, int find);
 void			set_tp(t_stack **a, t_stack **b);
-int				set_move(t_stack **a, t_stack **b);
+void			set_move(t_stack *a, t_stack **b);
 void			find_move(t_stack **a, t_stack **b);
 
 
