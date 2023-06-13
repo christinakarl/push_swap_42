@@ -49,11 +49,7 @@ void	list_append(t_stack **lst, int cont)
 	if (!addback)
 		return ;
 	addback->next = NULL;
-	// addback->cont = (int)malloc(sizeof(int));
-	// if (addback->cont == NULL)
-	// 	return ;
 	addback->cont = cont;
-
 	if (*lst == NULL)
 	{
 		*lst = addback;
@@ -68,9 +64,9 @@ void	list_append(t_stack **lst, int cont)
 //create a new list out of parameter **tab
 int	new_list(t_stack **list, char **tab)
 {
-	int					a;
-	long long int		temp;
-	int					cont;
+	int				a;
+	long long int	temp;
+	int				cont;
 
 	a = 0;
 	while (tab[a])

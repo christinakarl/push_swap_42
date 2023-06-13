@@ -63,7 +63,7 @@ void	node_push(t_stack **push, t_stack **to)
 {
 	t_stack	*temp_p;
 
-	temp_p = (*push);
+	temp_p = *push;
 	*push = (*push)->next;
 	if (*push)
 		(*push)->prev = NULL;

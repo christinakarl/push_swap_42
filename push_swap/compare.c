@@ -132,6 +132,25 @@ void	algo_five(t_stack **a, t_stack **b)
 	pa(a, b);
 }
 
+int	find_smallest(t_stack *b)
+{
+	int	i;
+	int	s;
+
+	s = b->index;
+	i = 0;
+	while (b)
+	{
+		if (b->index < s)
+		{
+			s = b->index;
+			i = b->pos;
+		}
+		b = b->next;
+	}
+	return (i);
+}
+
 //set target for b and position for a & b
 void	set_tp(t_stack **a, t_stack **b)
 {
@@ -141,16 +160,15 @@ void	set_tp(t_stack **a, t_stack **b)
 	t_stack	*headb;
 
 	bpos = -1;
-	while (++bpos < list_size(*b))
+	while (++bpos < (*b)->len)
 	{
 		headb = get_node(*b, bpos);
 		headb->to = NULL;
 		apos = -1;
-		while (++apos < list_size(*a))
+		while (++apos < (*a)->len)
 		{
 			heada = get_node(*a, apos);
-			if (!heada->pos)
-				heada->pos = apos;
+			heada->pos = apos;
 			if (heada->index > headb->index)
 			{
 				if (!headb->to)
@@ -160,9 +178,20 @@ void	set_tp(t_stack **a, t_stack **b)
 			}
 		}
 	if (!headb->to)
-		headb->to = *a;
+		headb->to = get_node(*a, find_smallest(*a));
 	headb->pos = bpos;
 	}
+}
+
+void	print_stack(char c, t_stack *x)
+{
+	ft_printf("stack %c: ", c);
+	while (x)
+	{
+		ft_printf("%d ", x->cont);
+		x = x->next;
+	}
+	ft_printf("\n");
 }
 
 //set length & median in each list element of a & b
@@ -171,26 +200,28 @@ void	set_lm(t_stack **a, t_stack **b)
 	int	a_len;
 	int	b_len;
 
+	*b = first_node(*b);
+	*a = first_node(*a);
 	a_len = list_size(*a);
 	b_len = list_size(*b);
-	while (*b)
-	{
+	// while (*b)
+	// {
 		(*b)->len = b_len;
 		(*b)->med = b_len / 2;
-		if (!(*b)->next)
-			break ;
-		(*b) = (*b)->next;
-	}
-	*b = first_node(*b);
-	while (*a)
-	{
+	// 	if (!(*b)->next)
+	// 		break ;
+	// 	(*b) = (*b)->next;
+	// }
+	// *b = first_node(*b);
+	// while (*a)
+	// {
 		(*a)->len = a_len;
 		(*a)->med = a_len / 2;
-		if (!(*a)->next)
-			break ;
-		(*a) = (*a)->next;
-	}
-	*a = first_node(*a);
+	// 	if (!(*a)->next)
+	// 		break ;
+	// 	(*a) = (*a)->next;
+	// }
+	// *a = first_node(*a);
 }
 
 //find where element is in relation to median & determine how many moves are needed for each element to reach its to in a
@@ -199,8 +230,8 @@ void	set_move(t_stack *a, t_stack **b)
 	int		i;
 	t_stack	*c;
 
-	i = 0;
-	while (i < (*b)->len)
+	i = -1;
+	while (++i < (*b)->len)
 	{
 		c = get_node(*b, i);
 		if (c->pos <= (*b)->med && c->to->pos > a->med)
@@ -209,12 +240,9 @@ void	set_move(t_stack *a, t_stack **b)
 			c->mov = ((*b)->len - c->pos) + c->to->pos;
 		else if (c->pos > (*b)->med && c->to->pos > a->med)
 		{
-			if (((*b)->len - c->pos) > (a->len - c->to->pos))
-				c->mov = (((*b)->len - c->pos) - (a->len - c->to->pos)) * 2;
-			else if (((*b)->len - c->pos) < (a->len - c->to->pos))
-				c->mov = ((a->len - c->to->pos) - ((*b)->len - c->pos)) * 2;
-			else if (((*b)->len - c->pos) == (a->len - c->to->pos))
-				c->mov = (*b)->len - c->pos;
+			c->mov = nbr_rot(((*b)->len - c->pos), (a->len - c->to->pos));
+			if (((*b)->len - c->pos) != (a->len - c->to->pos))
+				c->mov *= 2;
 		}
 		else if (c->pos <= (*b)->med && c->to->pos <= a->med)
 		{
@@ -223,7 +251,6 @@ void	set_move(t_stack *a, t_stack **b)
 			else
 				c->mov = c->pos;
 		}
-		i++;
 	}
 }
 
@@ -250,6 +277,8 @@ int	find_best_option(t_stack *b)
 //repeat a rotate/swap/push action multiple times
 void	rep_act(t_stack **a, t_stack **b, void (*act)(t_stack **, t_stack **), int rep)
 {
+	if (rep == 0)
+		return ;
 	while (rep > 0)
 	{
 		act(a, b);
@@ -260,6 +289,8 @@ void	rep_act(t_stack **a, t_stack **b, void (*act)(t_stack **, t_stack **), int 
 //repeat a rotate/swap/push action multiple times, only one stack
 void	rep_act2(t_stack **x, void (*act)(t_stack **), int rep)
 {
+	if (rep == 0)
+		return ;
 	while (rep > 0)
 	{
 		act(x);
@@ -294,7 +325,7 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 	if (c->pos > (*b)->med && c->to->pos > (*a)->med)
 	{
 		turn = nbr_rot(((*b)->len - c->pos), ((*a)->len - c->to->pos));
-		rep_act(a, b, rrr, turn);
+		rep_act(a, &c, rrr, turn);
 	}
 	else if (c->pos <= (*b)->med && c->to->pos <= (*a)->med)
 	{
@@ -302,15 +333,15 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 			turn = c->pos;
 		else
 			turn = c->to->pos;
-		rep_act(a, b, rr, turn);
+		rep_act(a, &c, rr, turn);
 	}
 	if (c->pos <= (*b)->med)
-		rep_act2(b, rb, (c->pos - turn));
-	else if (c->pos > (*b)->med)
-		rep_act2(b, rrb, ((*b)->len - c->pos - turn));
+		rep_act2(&c, rb, (c->pos - turn));
+	if (c->pos > (*b)->med)
+		rep_act2(&c, rrb, ((*b)->len - c->pos - turn));
 	if (c->to->pos <= (*a)->med)
 		rep_act2(a, ra, (c->to->pos - turn));
-	else if (c->to->pos > (*a)->med)
+	if (c->to->pos > (*a)->med)
 		rep_act2(a, rra, ((*a)->len - c->to->pos - turn));
 }
 
@@ -320,8 +351,8 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 void	algo_more(t_stack **a, t_stack **b)
 {
 	int	len;
-	t_stack	*temp;
 	int	best_option = 0;
+	int	i;
 
 	len = list_size(*a);
 	while (len > 3)
@@ -337,25 +368,26 @@ void	algo_more(t_stack **a, t_stack **b)
 
 	// ft_printf("best option: %d\n", best_option);
 	// move_best_option(a, b, best_option);
-
-
-	temp = *b;
-	while (*b)										//leaves only 2 nbr in a in the end
+	set_lm(a, b);
+	i = -1;
+	while ((*b && *a))
 	{
-		set_tp(a, b);
+		print_stack('a', *a);
+		print_stack('b', *b);
 		set_lm(a, b);
-		ft_printf("median: %d & length: %d\n", (*b)->med, (*b)->len);
+		set_tp(a, b);
+		ft_printf("b's length: %d\n", (*b)->len);
 		set_move(*a, b);
-		if (temp->to)
-		ft_printf("b's target: %d cont: %d, index: %d, nr of movs necessary: %d\n", temp->to->cont, temp->cont,temp->index, temp->mov);
-		temp = temp->next;
+		if ((*b)->to)
+			ft_printf("b's target: %d cont: %d, index: %d, nr of moves necessary: %d\n", (*b)->to->cont, (*b)->cont, (*b)->index, (*b)->mov);
+
 		best_option = find_best_option(*b);
+		ft_printf("best option: %d\n", best_option);
 		move_best_option(a, b, best_option);
 		pa(a, b);
 
-
-
 	}
+	// if  (find_position(*a, 0) > )
 }
 
 

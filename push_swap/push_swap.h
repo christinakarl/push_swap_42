@@ -78,6 +78,8 @@ void			move_best_option(t_stack **a, t_stack **b, int place);
 void			rep_act(t_stack **a, t_stack **b, void (*act)(t_stack **, t_stack **), int rep);
 void			rep_act2(t_stack **x, void (*act)(t_stack **), int rep);
 int				nbr_rot(int x, int y);
+int				find_smallest(t_stack *b);
+void			print_stack(char c, t_stack *x);
 
 
 
