@@ -20,11 +20,13 @@
 
 typedef struct s_stack
 {
-	int				content;
+	int				cont;
 	int				index;
-	struct s_stack	*target;
+	struct s_stack	*to;
 	int				pos;
-	int				move;
+	int				mov;
+	int				len;
+	int				med;
 	struct s_stack	*prev;
 	struct s_stack	*next;
 
@@ -70,7 +72,12 @@ void			algo_more(t_stack **a, t_stack **b);
 int				find_position(t_stack *list, int find);
 void			set_tp(t_stack **a, t_stack **b);
 void			set_move(t_stack *a, t_stack **b);
-void			find_move(t_stack **a, t_stack **b);
+int				find_best_option(t_stack *b);
+void			set_lm(t_stack **a, t_stack **b);
+void			move_best_option(t_stack **a, t_stack **b, int place);
+void			rep_act(t_stack **a, t_stack **b, void (*act)(t_stack **, t_stack **), int rep);
+void			rep_act2(t_stack **x, void (*act)(t_stack **), int rep);
+int				nbr_rot(int x, int y);
 
 
 

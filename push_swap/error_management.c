@@ -77,7 +77,7 @@ int	check_dupl(t_stack **head)
 		while (x < list_size(*head))
 		{
 			b = get_node(*head, x);
-			if (a->content == b->content)
+			if (a->cont == b->cont)
 				return (1);
 			x++;
 		}

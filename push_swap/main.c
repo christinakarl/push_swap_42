@@ -32,7 +32,7 @@ void	clear_list(t_stack **list)
 	while (*list != NULL)
 	{
 		next = (*list)->next;
-		// free((*list)->content);
+		// free((*list)->cont);
 		free(*list);
 		(*list) = next;
 	}
@@ -90,14 +90,14 @@ int	main(int argc, char **argv)
 	ft_printf("a: ");
 	while (a)
 	{
-		ft_printf("%d ", (a->content));
+		ft_printf("%d ", (a->cont));
 		a = a->next;
 	}
 	ft_printf("\n");
 	ft_printf("b: ");
 	while (b)
 	{
-		ft_printf("%d ", (b->content));
+		ft_printf("%d ", (b->cont));
 		b = b->next;
 	}
 	ft_printf("\n");

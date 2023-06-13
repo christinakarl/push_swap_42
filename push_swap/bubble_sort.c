@@ -19,9 +19,9 @@ void	content_swap(t_stack *one, t_stack *two)
 	temp = (t_stack *)malloc(sizeof(t_stack));
 	if (!temp)
 		return ;
-	temp->content = one->content;
-	one->content = two->content;
-	two->content = temp->content;
+	temp->cont = one->cont;
+	one->cont = two->cont;
+	two->cont = temp->cont;
 	free(temp);
 }
 
@@ -55,7 +55,7 @@ void	bubble_sort(t_stack **head)
 		while (x < list_size(*head))
 		{
 			b = get_node(*head, x);
-			if (a->content > b->content)
+			if (a->cont > b->cont)
 				content_swap(a, b);
 			x++;
 		}

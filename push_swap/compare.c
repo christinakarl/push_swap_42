@@ -144,7 +144,7 @@ void	set_tp(t_stack **a, t_stack **b)
 	while (++bpos < list_size(*b))
 	{
 		headb = get_node(*b, bpos);
-		headb->target = NULL;
+		headb->to = NULL;
 		apos = -1;
 		while (++apos < list_size(*a))
 		{
@@ -153,70 +153,175 @@ void	set_tp(t_stack **a, t_stack **b)
 				heada->pos = apos;
 			if (heada->index > headb->index)
 			{
-				if (!headb->target)
-					headb->target = heada;
-				else if (heada->index < headb->target->index)
-					headb->target = heada;
+				if (!headb->to)
+					headb->to = heada;
+				else if (heada->index < headb->to->index)
+					headb->to = heada;
 			}
 		}
-	if (!headb->target)
-		headb->target = *a;
+	if (!headb->to)
+		headb->to = *a;
 	headb->pos = bpos;
 	}
 }
 
+//set length & median in each list element of a & b
+void	set_lm(t_stack **a, t_stack **b)
+{
+	int	a_len;
+	int	b_len;
 
-//find where element is in relation to median & determine how many actions are needed for each element
+	a_len = list_size(*a);
+	b_len = list_size(*b);
+	while (*b)
+	{
+		(*b)->len = b_len;
+		(*b)->med = b_len / 2;
+		if (!(*b)->next)
+			break ;
+		(*b) = (*b)->next;
+	}
+	*b = first_node(*b);
+	while (*a)
+	{
+		(*a)->len = a_len;
+		(*a)->med = a_len / 2;
+		if (!(*a)->next)
+			break ;
+		(*a) = (*a)->next;
+	}
+	*a = first_node(*a);
+}
+
+//find where element is in relation to median & determine how many moves are needed for each element to reach its to in a
 void	set_move(t_stack *a, t_stack **b)
 {
-	int		alen;
-	int		blen;
-	int		position_b;
-	t_stack	*copy;
+	int		i;
+	t_stack	*c;
 
-	alen = list_size(a);
-	blen = list_size(*b);
-	position_b = 0;
-	while (position_b < blen)
+	i = 0;
+	while (i < (*b)->len)
 	{
-		copy = get_node(*b, position_b);
-		if (copy->pos <= (blen / 2) && copy->target->pos > (alen / 2))
-			copy->move = copy->pos + (alen - copy->target->pos);
-		else if (copy->pos > (blen / 2) && copy->target->pos <= (alen / 2))
-			copy->move = (blen - copy->pos) + copy->target->pos;
-		else if (copy->pos > (blen / 2) && copy->target->pos > (alen / 2))
+		c = get_node(*b, i);
+		if (c->pos <= (*b)->med && c->to->pos > a->med)
+			c->mov = c->pos + (a->len - c->to->pos);
+		else if (c->pos > (*b)->med && c->to->pos <= a->med)
+			c->mov = ((*b)->len - c->pos) + c->to->pos;
+		else if (c->pos > (*b)->med && c->to->pos > a->med)
 		{
-			if ((blen - copy->pos) > (alen - copy->target->pos))
-				copy->move = (blen - copy->pos) - (alen - copy->target->pos) * 2;
-			else if ((blen - copy->pos) < (alen - copy->target->pos))
-				copy->move = ((alen - copy->target->pos) - (blen - copy->pos)) * 2;
-			else if ((blen - copy->pos) == (alen - copy->target->pos))
-				copy->move = blen - copy->pos;
+			if (((*b)->len - c->pos) > (a->len - c->to->pos))
+				c->mov = (((*b)->len - c->pos) - (a->len - c->to->pos)) * 2;
+			else if (((*b)->len - c->pos) < (a->len - c->to->pos))
+				c->mov = ((a->len - c->to->pos) - ((*b)->len - c->pos)) * 2;
+			else if (((*b)->len - c->pos) == (a->len - c->to->pos))
+				c->mov = (*b)->len - c->pos;
 		}
-		else if (copy->pos <= (blen / 2) && copy->target->pos <= (alen / 2))
+		else if (c->pos <= (*b)->med && c->to->pos <= a->med)
 		{
-			if (copy->pos > copy->target->pos || copy->pos == copy->target->pos)
-				copy->move = copy->pos;
-			else if (copy->pos < copy->target->pos)
-				copy->move = copy->target->pos;
+			if (c->pos < c->to->pos)
+				c->mov = c->to->pos;
+			else
+				c->mov = c->pos;
 		}
-		position_b++;
+		i++;
 	}
 }
 
-//move the element which needs the least nr of moves to a
-// void	find_move(t_stack **a, t_stack **b)
-// {
+//pointer to the element which needs the least nr of movs to a
+int	find_best_option(t_stack *b)
+{
+	int		place;
+	int		least;
 
-// }
+	place = b->pos;
+	least = b->mov;
+	while (b)
+	{
+		if (b->mov < least)
+		{
+			least = b->mov;
+			place = b->pos;
+		}
+		b = b->next;
+	}
+	return (place);
+}
+
+//repeat a rotate/swap/push action multiple times
+void	rep_act(t_stack **a, t_stack **b, void (*act)(t_stack **, t_stack **), int rep)
+{
+	while (rep > 0)
+	{
+		act(a, b);
+		rep--;
+	}
+}
+
+//repeat a rotate/swap/push action multiple times, only one stack
+void	rep_act2(t_stack **x, void (*act)(t_stack **), int rep)
+{
+	while (rep > 0)
+	{
+		act(x);
+		rep--;
+	}
+}
+
+//find out how many double rotations are needed based on length & position
+int	nbr_rot(int x, int y)
+{
+	int	nb;
+
+	nb = 0;
+	if (x > y)
+		nb = x - y;
+	else if (x < y)
+		nb = y - x;
+	else
+		nb = x;
+	return (nb);
+}
+
+//mov best option to stack a
+void	move_best_option(t_stack **a, t_stack **b, int place)
+{
+	t_stack	*c;
+	int		turn;
+
+	turn = 0;
+	c = get_node(*b, place);
+	ft_printf("c->pos: %d & c->to->pos: %d\n", c->pos, c->to->pos);
+	if (c->pos > (*b)->med && c->to->pos > (*a)->med)
+	{
+		turn = nbr_rot(((*b)->len - c->pos), ((*a)->len - c->to->pos));
+		rep_act(a, b, rrr, turn);
+	}
+	else if (c->pos <= (*b)->med && c->to->pos <= (*a)->med)
+	{
+		if (c->pos < c->to->pos)
+			turn = c->pos;
+		else
+			turn = c->to->pos;
+		rep_act(a, b, rr, turn);
+	}
+	if (c->pos <= (*b)->med)
+		rep_act2(b, rb, (c->pos - turn));
+	else if (c->pos > (*b)->med)
+		rep_act2(b, rrb, ((*b)->len - c->pos - turn));
+	if (c->to->pos <= (*a)->med)
+		rep_act2(a, ra, (c->to->pos - turn));
+	else if (c->to->pos > (*a)->med)
+		rep_act2(a, rra, ((*a)->len - c->to->pos - turn));
+}
 
 //algo for >5 elements: 1. push all to b except of 3, 2. algo_three,
-// 3. find target_nodes for all of b nodes, 4. check which one can be moved most easily (least operations)
-// 5. move it, 6. repeat until !*b
+// 3. find to_nodes for all of b nodes, 4. check which one can be movd most easily (least operations)
+// 5. mov it, 6. repeat until !*b
 void	algo_more(t_stack **a, t_stack **b)
 {
 	int	len;
 	t_stack	*temp;
+	int	best_option = 0;
 
 	len = list_size(*a);
 	while (len > 3)
@@ -225,18 +330,54 @@ void	algo_more(t_stack **a, t_stack **b)
 		len--;
 	}
 	algo_three(a);
-	set_tp(a, b);
-	set_move(*a, b);
-	temp = *b;
-	while (temp)
-	{
-		//find target node for all of b, set positions
-		if (temp->target)
-			ft_printf("b's target: %d\n", temp->target->content);
-		ft_printf("b's position: %d, index: %d, nr of moves necessary: %d\n", temp->pos,temp->index, temp->move);
-		temp = temp->next;
-		//check which one is moved most easily, depending on if element is above or below median (both b and target)
+	// set_tp(a, b);
+	// set_lm(a, b);
+	// set_move(*a, b);
+	// best_option = find_best_option(*b);
 
-		//move it && compare first to second (if first is bigger > ra)
+	// ft_printf("best option: %d\n", best_option);
+	// move_best_option(a, b, best_option);
+
+
+	temp = *b;
+	while (*b)										//leaves only 2 nbr in a in the end
+	{
+		set_tp(a, b);
+		set_lm(a, b);
+		ft_printf("median: %d & length: %d\n", (*b)->med, (*b)->len);
+		set_move(*a, b);
+		if (temp->to)
+		ft_printf("b's target: %d cont: %d, index: %d, nr of movs necessary: %d\n", temp->to->cont, temp->cont,temp->index, temp->mov);
+		temp = temp->next;
+		best_option = find_best_option(*b);
+		move_best_option(a, b, best_option);
+		pa(a, b);
+
+
+
 	}
 }
+
+
+//from move_best_option
+	// if (c->pos <= (*b)->med && c->to->pos > (*a)->med)
+	// {
+	// 	rep_act2(b, rb, c->pos);
+	// 	rep_act2(a, rra, ((*a)->len - c->to->pos));
+	// 	ft_printf("first condition\n");
+	// }
+	// else if (c->pos > (*b)->med && c->to->pos <= (*a)->med)
+	// {
+	// 	rep_act2(b, rrb, ((*b)->len - c->pos));
+	// 	rep_act2(a, ra, c->to->pos);
+	// }
+
+			// if (((*b)->len - c->pos) > ((*a)->len - c->to->pos))
+		// 	turn = ((*b)->len - c->pos) - ((*a)->len - c->to->pos);
+		// else if (((*b)->len - c->pos) < ((*a)->len - c->to->pos))
+		// 	turn = ((*a)->len - c->to->pos) - ((*b)->len - c->pos);
+		// else if (((*b)->len - c->pos) == ((*a)->len - c->to->pos))
+		// 	turn = (*b)->len - c->pos;
+
+			// if ((*a)->pos != 0 && (*b)->pos != 0)
+	// 	set_lm(a, b);

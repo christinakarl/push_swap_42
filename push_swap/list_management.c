@@ -38,7 +38,7 @@ long long int	ft_longatoi(const char *str)
 }
 
 //append new node to list
-void	list_append(t_stack **lst, int content)
+void	list_append(t_stack **lst, int cont)
 {
 	t_stack	*addback;
 	t_stack	*copy;
@@ -49,10 +49,10 @@ void	list_append(t_stack **lst, int content)
 	if (!addback)
 		return ;
 	addback->next = NULL;
-	// addback->content = (int)malloc(sizeof(int));
-	// if (addback->content == NULL)
+	// addback->cont = (int)malloc(sizeof(int));
+	// if (addback->cont == NULL)
 	// 	return ;
-	addback->content = content;
+	addback->cont = cont;
 
 	if (*lst == NULL)
 	{
@@ -70,7 +70,7 @@ int	new_list(t_stack **list, char **tab)
 {
 	int					a;
 	long long int		temp;
-	int					content;
+	int					cont;
 
 	a = 0;
 	while (tab[a])
@@ -78,8 +78,8 @@ int	new_list(t_stack **list, char **tab)
 		temp = ft_longatoi(tab[a]);
 		if (temp > 2147483647 || temp < -2147483648)
 			return (1);
-		content = (int)temp;
-		list_append(list, content);
+		cont = (int)temp;
+		list_append(list, cont);
 		a++;
 	}
 	return (0);
@@ -103,7 +103,7 @@ void	index_list(t_stack **list, t_stack *index)
 		while (x < len)
 		{
 			ind_copy = get_node(index, x);
-			if (ind_copy->content == list_copy->content)
+			if (ind_copy->cont == list_copy->cont)
 			{
 				list_copy->index = x;
 				break ;
@@ -113,18 +113,3 @@ void	index_list(t_stack **list, t_stack *index)
 		i++;
 	}
 }
-
-// t_stack	*empty_list(int len)
-// {
-// 	t_stack	*new;
-// 	int		i;
-
-// 	new = NULL;
-// 	i = 0;
-// 	while (i < len)
-// 	{
-// 		list_append(&new, 0);
-// 		i++;
-// 	}
-// 	return (new);
-// }
