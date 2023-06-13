@@ -328,6 +328,7 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 	{
 		turn = nbr_rot(((*b)->len - c->pos), ((*a)->len - c->to->pos));
 		rep_act(a, b, rrr, turn);
+		turn++;
 	}
 	else if (c->pos <= (*b)->med && c->to->pos <= (*a)->med)
 	{
@@ -336,8 +337,9 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 		else
 			turn = c->to->pos;
 		rep_act(a, b, rr, turn);
+		turn++;
 	}
-	if (c->pos <= (*b)->med)
+	if (c->pos <= (*b)->med)										//error is probably here, when combined with turn, this does not give the right number, also double check rrr and rb/ra with nr:  0 9 4 15 5 1 3 17 16 7
 		rep_act2(b, rb, (c->pos - turn));
 	if (c->pos > (*b)->med)
 	{
