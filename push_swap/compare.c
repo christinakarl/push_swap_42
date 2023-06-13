@@ -322,10 +322,12 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 	turn = 0;
 	c = get_node(*b, place);
 	ft_printf("c->pos: %d & c->to->pos: %d\n", c->pos, c->to->pos);
+	ft_printf("b med: %d and b len: %d\n", (*b)->med, (*b)->len);
+	ft_printf("a med: %d and a len: %d\n\n", (*a)->med, (*a)->len);
 	if (c->pos > (*b)->med && c->to->pos > (*a)->med)
 	{
 		turn = nbr_rot(((*b)->len - c->pos), ((*a)->len - c->to->pos));
-		rep_act(a, &c, rrr, turn);
+		rep_act(a, b, rrr, turn);
 	}
 	else if (c->pos <= (*b)->med && c->to->pos <= (*a)->med)
 	{
@@ -333,12 +335,15 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 			turn = c->pos;
 		else
 			turn = c->to->pos;
-		rep_act(a, &c, rr, turn);
+		rep_act(a, b, rr, turn);
 	}
 	if (c->pos <= (*b)->med)
-		rep_act2(&c, rb, (c->pos - turn));
+		rep_act2(b, rb, (c->pos - turn));
 	if (c->pos > (*b)->med)
-		rep_act2(&c, rrb, ((*b)->len - c->pos - turn));
+	{
+		rep_act2(b, rrb, ((*b)->len - c->pos - turn));
+		ft_printf("condition rrb\n");
+	}
 	if (c->to->pos <= (*a)->med)
 		rep_act2(a, ra, (c->to->pos - turn));
 	if (c->to->pos > (*a)->med)
@@ -374,9 +379,10 @@ void	algo_more(t_stack **a, t_stack **b)
 	{
 		print_stack('a', *a);
 		print_stack('b', *b);
+		ft_printf("\n\n");
 		set_lm(a, b);
 		set_tp(a, b);
-		ft_printf("b's length: %d\n", (*b)->len);
+		// ft_printf("b's length: %d\n", (*b)->len);
 		set_move(*a, b);
 		if ((*b)->to)
 			ft_printf("b's target: %d cont: %d, index: %d, nr of moves necessary: %d\n", (*b)->to->cont, (*b)->cont, (*b)->index, (*b)->mov);
