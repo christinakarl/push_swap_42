@@ -204,24 +204,24 @@ void	set_lm(t_stack **a, t_stack **b)
 	*a = first_node(*a);
 	a_len = list_size(*a);
 	b_len = list_size(*b);
-	// while (*b)
-	// {
+	while (*b)
+	{
 		(*b)->len = b_len;
 		(*b)->med = b_len / 2;
-	// 	if (!(*b)->next)
-	// 		break ;
-	// 	(*b) = (*b)->next;
-	// }
-	// *b = first_node(*b);
-	// while (*a)
-	// {
+		if (!(*b)->next)
+			break ;
+		(*b) = (*b)->next;
+	}
+	*b = first_node(*b);
+	while (*a)
+	{
 		(*a)->len = a_len;
 		(*a)->med = a_len / 2;
-	// 	if (!(*a)->next)
-	// 		break ;
-	// 	(*a) = (*a)->next;
-	// }
-	// *a = first_node(*a);
+		if (!(*a)->next)
+			break ;
+		(*a) = (*a)->next;
+	}
+	*a = first_node(*a);
 }
 
 //find where element is in relation to median & determine how many moves are needed for each element to reach its to in a
@@ -295,6 +295,7 @@ void	rep_act2(t_stack **x, void (*act)(t_stack **), int rep)
 	{
 		act(x);
 		rep--;
+		ft_printf("in repact2 boucle\n");
 	}
 }
 
@@ -323,12 +324,12 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 	c = get_node(*b, place);
 	ft_printf("c->pos: %d & c->to->pos: %d\n", c->pos, c->to->pos);
 	ft_printf("b med: %d and b len: %d\n", (*b)->med, (*b)->len);
-	ft_printf("a med: %d and a len: %d\n\n", (*a)->med, (*a)->len);
+	ft_printf("a med: %d and a len: %d\n", (*a)->med, (*a)->len);
 	if (c->pos > (*b)->med && c->to->pos > (*a)->med)
 	{
 		turn = nbr_rot(((*b)->len - c->pos), ((*a)->len - c->to->pos));
 		rep_act(a, b, rrr, turn);
-		turn++;
+		// turn++;
 	}
 	else if (c->pos <= (*b)->med && c->to->pos <= (*a)->med)
 	{
@@ -337,15 +338,12 @@ void	move_best_option(t_stack **a, t_stack **b, int place)
 		else
 			turn = c->to->pos;
 		rep_act(a, b, rr, turn);
-		turn++;
+		// turn++;
 	}
 	if (c->pos <= (*b)->med)										//error is probably here, when combined with turn, this does not give the right number, also double check rrr and rb/ra with nr:  0 9 4 15 5 1 3 17 16 7
 		rep_act2(b, rb, (c->pos - turn));
 	if (c->pos > (*b)->med)
-	{
 		rep_act2(b, rrb, ((*b)->len - c->pos - turn));
-		ft_printf("condition rrb\n");
-	}
 	if (c->to->pos <= (*a)->med)
 		rep_act2(a, ra, (c->to->pos - turn));
 	if (c->to->pos > (*a)->med)
@@ -381,7 +379,7 @@ void	algo_more(t_stack **a, t_stack **b)
 	{
 		print_stack('a', *a);
 		print_stack('b', *b);
-		ft_printf("\n\n");
+		ft_printf("\n");
 		set_lm(a, b);
 		set_tp(a, b);
 		// ft_printf("b's length: %d\n", (*b)->len);
@@ -393,6 +391,7 @@ void	algo_more(t_stack **a, t_stack **b)
 		ft_printf("best option: %d\n", best_option);
 		move_best_option(a, b, best_option);
 		pa(a, b);
+		ft_printf("\n");
 
 	}
 	// if  (find_position(*a, 0) > )

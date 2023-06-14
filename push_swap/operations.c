@@ -150,12 +150,14 @@ void	rr(t_stack **a, t_stack **b)
 void	rra(t_stack **a)
 {
 	int		len;
+	t_stack	*temp;
 
+	*a = first_node(*a);
 	len = list_size(*a);
-	*a = last_node(*a);
+	temp = last_node(*a);
 	if (len >= 2)
 	{
-		*a = node_rotate(*a);
+		*a = node_rotate(temp);
 		ft_printf("rra\n");
 	}
 }
@@ -164,12 +166,13 @@ void	rra(t_stack **a)
 void	rrb(t_stack **b)
 {
 	int		len;
+	t_stack	*temp;
 
 	len = list_size(*b);
-	*b = last_node(*b);
+	temp = last_node(*b);
 	if (len >= 2)
 	{
-		*b = node_rotate(*b);
+		*b = node_rotate(temp);
 		ft_printf("rrb\n");
 	}
 }
@@ -177,12 +180,15 @@ void	rrb(t_stack **b)
 //last to first for both rrr
 void	rrr(t_stack **a, t_stack **b)
 {
-	*b = last_node(*b);
-	*a = last_node(*a);
+	t_stack	*temp_a;
+	t_stack	*temp_b;
+
+	temp_b = last_node(*b);
+	temp_a = last_node(*a);
 	if (list_size(*a) >= 2)
-		*a = node_rotate(*a);
+		*a = node_rotate(temp_a);
 	if (list_size(*b) >= 2)
-		*b = node_rotate(*b);
+		*b = node_rotate(temp_b);
 	ft_printf("rrr\n");
 }
 
