@@ -6,12 +6,14 @@
 #    By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/06 15:04:04 by ckarl             #+#    #+#              #
-#    Updated: 2023/05/06 15:04:09 by ckarl            ###   ########.fr        #
+#    Updated: 2023/06/15 18:42:44 by ckarl            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			= main.c error_management.c list_management.c bubble_sort.c \
-				  operations.c compare.c
+				  1.operations.c 2.operations.c 3.operations.c algorithms.c \
+				  b_manipulations.c 1.helpers.c 2.helpers.c order.c \
+				  node_manipulations.c
 
 OBJS			= ${SRCS:.c=.o}
 
@@ -49,12 +51,12 @@ ${NAME}:		${OBJS}
 
 clean:
 				${RM} ${OBJS}
-				# cd libft; make clean
+				cd libft; make clean
 				@echo "$(COLOUR_GREEN)( ಠ ͜ʖ ಠ )$(COLOUR_END)"
 
 fclean:			clean
 				${RM} ${NAME}
-				# cd libft; make fclean
+				cd libft; make fclean
 				@echo "$(COLOUR_VIO)All super clear!$(COLOUR_END)"
 
 re:				fclean all

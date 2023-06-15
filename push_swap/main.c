@@ -6,38 +6,11 @@
 /*   By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 15:04:19 by ckarl             #+#    #+#             */
-/*   Updated: 2023/05/06 15:04:21 by ckarl            ###   ########.fr       */
+/*   Updated: 2023/06/15 19:10:20 by ckarl            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-void	clear_tab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
-void	clear_list(t_stack **list)
-{
-	t_stack	*next;
-
-	while (*list != NULL)
-	{
-		next = (*list)->next;
-		// free((*list)->cont);
-		free(*list);
-		(*list) = next;
-	}
-	*list = NULL;
-}
 
 //free allocated memory
 void	clear_all(char **tab, t_stack **list)
@@ -46,68 +19,65 @@ void	clear_all(char **tab, t_stack **list)
 	clear_list(list);
 }
 
+//print entire stack
+void	print_stack(char c, t_stack *x)
+{
+	ft_printf("stack %c: ", c);
+	while (x)
+	{
+		ft_printf("%d ", x->cont);
+		x = x->next;
+	}
+	ft_printf("\n");
+}
+
+int	put_error(char *str)
+{
+	ft_putstr_fd(str, 2);
+	return (0);
+}
+
+int	clear_and_error(char **tab, t_stack **x)
+{
+	if (tab && x)
+		clear_all(tab, x);
+	else if (tab)
+		clear_tab(tab);
+	else if (x)
+		clear_list(x);
+	return (put_error(ERROR));
+}
+
 int	main(int argc, char **argv)
 {
-//done: check if argv is one string with different numbers or multiple argv & if multiple check each
-//done: argv if it is string (using strchr) > if mix "Error\n"
 	char	**tab;
-	t_stack	*a = NULL;
-	t_stack	*b = NULL;
+	t_stack	*a;
+	t_stack	*b;
 
-	if (argc < 2) //no parameters
-		return (ft_printf("Error\n"));
-	if (ft_strchr(argv[1], ' ') != NULL) //first argv is a string
+	a = NULL;
+	b = NULL;
+	if (argc < 2)
+		return (0);
+	if (ft_strchr(argv[1], ' ') != NULL)
 	{
-		if (argc > 2) //mix of strings and int (if string is first)
-			return (ft_printf("Error\n"));
+		if (argc > 2)
+			return (put_error(ERROR));
 		tab = ft_split(argv[1], ' ');
 	}
 	else
 		tab = input_tab(argv, argc);
-//done: already check for other char (digit, -, +, ' '), otherwise "Error\n"
 	if (check_input(tab) == 1)
-	{
-		clear_tab(tab);
-		return (ft_printf("Error\n"));
-	}
-//done: check for duplicates >> compare each element with all following elements, beware of case 4 & 04 if dupl > "Error\n"
-//done: create list of int (atoi)
-//done: check for >int max || <int min
+		return (clear_and_error(tab, &a));
 	if (new_list(&a, tab) == 1 || check_dupl(&a) == 1)
-	{
-		clear_all(tab, &a);
-		return (ft_printf("Error\n"));
-	}
-//done: create b list, bubble sort, transform a with b numbers
+		return (clear_and_error(tab, &a));
 	new_list(&b, tab);
 	bubble_sort(&b);
 	index_list(&a, b);
 	clear_list(&b);
-//done: create prev pointers, b list should be empty
-
 	direct_algo(&a, &b);
-
-	ft_printf("a: ");
-	while (a)
-	{
-		ft_printf("%d ", (a->cont));
-		a = a->next;
-	}
-	ft_printf("\n");
-	ft_printf("b: ");
-	while (b)
-	{
-		ft_printf("%d ", (b->cont));
-		b = b->next;
-	}
-	ft_printf("\n");
-//done: create all action functions
-
-//redirect to right algo
-
-
 	clear_all(tab, &a);
-	clear_list(&b);
-	// exit(0); doesn't really avoid leaks here
 	return (0);
 }
+
+	// print_stack('a', a);
+	// print_stack('b', b);

@@ -12,36 +12,37 @@
 
 #include "push_swap.h"
 
-//check for other characters or only -- || ++ without digits
+//check for other characters or only -- || ++
 int	check_input(char **tab)
 {
 	int	i;
 	int	j;
 	int	check_digit;
+	int	check_sign;
 
-	j = 0;
-	check_digit = 0;
-	while (tab[j])
+	j = -1;
+	while (tab[++j])
 	{
-		i = 0;
-		while (tab[j][i])
+		i = -1;
+		check_digit = 0;
+		check_sign = 0;
+		while (tab[j][++i])
 		{
 			if (ft_isdigit(tab[j][i]) == 1)
 				check_digit++;
-			if (tab[j][i] == ' ' || tab[j][i] == '-' || tab[j][i] == '+' || ft_isdigit(tab[j][i]) == 1)
-				i++;
-			else
+			if (tab[j][i] == '-' || tab[j][i] == '+')
+				check_sign++;
+			if (tab[j][i] != ' ' && tab[j][i] != '-' \
+				&& tab[j][i] != '+' && ft_isdigit(tab[j][i]) != 1)
 				return (1);
 		}
-		if (check_digit < 1)
+		if (check_digit < 1 || check_sign > 1)
 			return (1);
-		check_digit = 0;
-		j++;
 	}
 	return (0);
 }
 
-//dup char **tab
+//dup char **tab from argv
 char	**input_tab(char **argv, int argc)
 {
 	int		a;
@@ -84,4 +85,32 @@ int	check_dupl(t_stack **head)
 		i++;
 	}
 	return (0);
+}
+
+//free tab
+void	clear_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+//free linked list
+void	clear_list(t_stack **list)
+{
+	t_stack	*next;
+
+	while (*list != NULL)
+	{
+		next = (*list)->next;
+		free(*list);
+		(*list) = next;
+	}
+	*list = NULL;
 }

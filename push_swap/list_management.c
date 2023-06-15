@@ -6,15 +6,16 @@
 /*   By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 15:04:19 by ckarl             #+#    #+#             */
-/*   Updated: 2023/05/06 15:04:21 by ckarl            ###   ########.fr       */
+/*   Updated: 2023/06/15 18:59:46 by ckarl            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+//regular atoi using long long int
 long long int	ft_longatoi(const char *str)
 {
-	int	i;
+	int				i;
 	long long int	sign;
 	long long int	result;
 
@@ -84,9 +85,9 @@ int	new_list(t_stack **list, char **tab)
 //fill original list with index numbers
 void	index_list(t_stack **list, t_stack *index)
 {
-	int	i;
-	int	x;
-	int	len;
+	int		i;
+	int		x;
+	int		len;
 	t_stack	*ind_copy;
 	t_stack	*list_copy;
 

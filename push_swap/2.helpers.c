@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bubble_sort.c                                      :+:      :+:    :+:   */
+/*   helpers_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,38 +12,44 @@
 
 #include "push_swap.h"
 
-void	content_swap(t_stack *one, t_stack *two)
+int	list_size(t_stack *lst)
 {
-	t_stack	*temp;
-
-	temp = (t_stack *)malloc(sizeof(t_stack));
-	if (!temp)
-		return ;
-	temp->cont = one->cont;
-	one->cont = two->cont;
-	two->cont = temp->cont;
-	free(temp);
-}
-
-void	bubble_sort(t_stack **head)
-{
-	t_stack	*a;
-	t_stack	*b;
-	int		i;
-	int		x;
+	int	i;
 
 	i = 0;
-	while (i < list_size(*head))
+	while (lst)
 	{
-		a = get_node(*head, i);
-		x = i + 1;
-		while (x < list_size(*head))
-		{
-			b = get_node(*head, x);
-			if (a->cont > b->cont)
-				content_swap(a, b);
-			x++;
-		}
+		lst = lst->next;
 		i++;
 	}
+	return (i);
+}
+
+t_stack	*last_node(t_stack *lst)
+{
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
+t_stack	*first_node(t_stack *lst)
+{
+	while (lst->prev)
+		lst = lst->prev;
+	return (lst);
+}
+
+t_stack	*get_node(t_stack *head, int index)
+{
+	t_stack	*copy;
+	int		i;
+
+	i = 0;
+	copy = head;
+	while (i < index && copy != NULL)
+	{
+		copy = copy->next;
+		i++;
+	}
+	return (copy);
 }

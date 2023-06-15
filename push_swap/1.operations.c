@@ -1,49 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bubble_sort.c                                      :+:      :+:    :+:   */
+/*   1.operations.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 15:04:19 by ckarl             #+#    #+#             */
-/*   Updated: 2023/05/06 15:04:21 by ckarl            ###   ########.fr       */
+/*   Updated: 2023/06/15 18:39:47 by ckarl            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void	content_swap(t_stack *one, t_stack *two)
+//swap first two nodes of a
+void	sa(t_stack **a)
 {
-	t_stack	*temp;
-
-	temp = (t_stack *)malloc(sizeof(t_stack));
-	if (!temp)
-		return ;
-	temp->cont = one->cont;
-	one->cont = two->cont;
-	two->cont = temp->cont;
-	free(temp);
+	if (list_size(*a) >= 2)
+	{
+		*a = node_swap(*a, (*a)->next);
+		ft_printf("sa\n");
+	}
 }
 
-void	bubble_sort(t_stack **head)
+//swap first two nodes of b
+void	sb(t_stack **b)
 {
-	t_stack	*a;
-	t_stack	*b;
-	int		i;
-	int		x;
-
-	i = 0;
-	while (i < list_size(*head))
+	if (list_size(*b) >= 2)
 	{
-		a = get_node(*head, i);
-		x = i + 1;
-		while (x < list_size(*head))
-		{
-			b = get_node(*head, x);
-			if (a->cont > b->cont)
-				content_swap(a, b);
-			x++;
-		}
-		i++;
+		*b = node_swap(*b, (*b)->next);
+		ft_printf("sb\n");
 	}
+}
+
+// //swap first two nodes of both
+void	ss(t_stack **a, t_stack **b)
+{
+	if (list_size(*a) >= 2)
+		*a = node_swap(*a, (*a)->next);
+	if (list_size(*b) >= 2)
+		*b = node_swap(*b, (*b)->next);
+	ft_printf("ss\n");
 }
