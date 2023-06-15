@@ -6,13 +6,13 @@
 #    By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/06 15:04:04 by ckarl             #+#    #+#              #
-#    Updated: 2023/06/15 18:42:44 by ckarl            ###   ########.fr        #
+#    Updated: 2023/06/15 19:25:32 by ckarl            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS			= main.c error_management.c list_management.c bubble_sort.c \
-				  1.operations.c 2.operations.c 3.operations.c algorithms.c \
-				  b_manipulations.c 1.helpers.c 2.helpers.c order.c \
+				  operations_1.c operations_2.c operations_3.c algorithms.c \
+				  b_manipulations.c helpers_1.c helpers_2.c order.c \
 				  node_manipulations.c
 
 OBJS			= ${SRCS:.c=.o}
