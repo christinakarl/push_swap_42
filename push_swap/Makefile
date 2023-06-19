@@ -6,7 +6,7 @@
 #    By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/06 15:04:04 by ckarl             #+#    #+#              #
-#    Updated: 2023/06/15 19:25:32 by ckarl            ###   ########.fr        #
+#    Updated: 2023/06/16 11:54:58 by ckarl            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,16 +48,16 @@ all:			${NAME}
 ${NAME}:		${OBJS}
 				cd libft; make bonus
 				${CC} ${CFLAGS} -o $@ ${OBJS} ${LIBS} ${OTH_HEAD}
+				@echo "$(COLOUR_GREEN)( ಠ ͜ʖ ಠ )$(COLOUR_END)"
 
 clean:
 				${RM} ${OBJS}
 				cd libft; make clean
-				@echo "$(COLOUR_GREEN)( ಠ ͜ʖ ಠ )$(COLOUR_END)"
 
 fclean:			clean
 				${RM} ${NAME}
 				cd libft; make fclean
-				@echo "$(COLOUR_VIO)All super clear!$(COLOUR_END)"
+				@echo "$(COLOUR_VIO)All clean!$(COLOUR_END)"
 
 re:				fclean all
 

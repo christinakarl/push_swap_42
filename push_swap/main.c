@@ -6,7 +6,7 @@
 /*   By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 15:04:19 by ckarl             #+#    #+#             */
-/*   Updated: 2023/06/15 19:24:27 by ckarl            ###   ########.fr       */
+/*   Updated: 2023/06/16 11:53:34 by ckarl            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ int	clear_and_error(char **tab, t_stack **x)
 {
 	if (tab && x)
 		clear_all(tab, x);
-	else if (tab)
+	else if (tab && !x)
 		clear_tab(tab);
-	else if (x)
+	else if (!tab && x)
 		clear_list(x);
 	return (put_error(ERROR));
 }
@@ -66,8 +66,6 @@ int	main(int argc, char **argv)
 	}
 	else
 		tab = input_tab(argv, argc);
-	if (check_input(tab) == 1)
-		return (clear_and_error(tab, &a));
 	if (new_list(&a, tab) == 1 || check_dupl(&a) == 1)
 		return (clear_and_error(tab, &a));
 	new_list(&b, tab);

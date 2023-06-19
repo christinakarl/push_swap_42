@@ -6,7 +6,7 @@
 /*   By: ckarl <ckarl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 15:04:19 by ckarl             #+#    #+#             */
-/*   Updated: 2023/06/15 18:59:46 by ckarl            ###   ########.fr       */
+/*   Updated: 2023/06/16 11:49:49 by ckarl            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	list_append(t_stack **lst, int cont)
 	addback->prev = copy;
 }
 
-//create a new list out of parameter **tab
+//create a new list out of parameter **tab, check **tab for errors
 int	new_list(t_stack **list, char **tab)
 {
 	int				a;
@@ -70,6 +70,8 @@ int	new_list(t_stack **list, char **tab)
 	int				cont;
 
 	a = 0;
+	if (check_input(tab) == 1)
+		return (1);
 	while (tab[a])
 	{
 		temp = ft_longatoi(tab[a]);
